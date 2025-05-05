@@ -11,7 +11,7 @@ export const sceneConfigurations = {
                 action: () => switchScene(2) // Ação ao clicar: muda para a cena 2
             },
             //Info:
-            {type: 'image',position: new THREE.Vector3(-213, 50, -200),target: 'images/infos/portão_info.png'}
+            {type: 'image',position: new THREE.Vector3(-213, 50, -200),target: 'images/infos/portao_info.png'}
         ]
     },
 
