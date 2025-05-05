@@ -176,59 +176,7 @@ container.addEventListener('mousemove', function (event) {
     });
 });
 
-// Variáveis globais
-const raycaster = new THREE.Raycaster();
-const mouse = new THREE.Vector2();
-let selectedMarker = null;
-let isRightMouseDown = false;
-let markerDirection = null;
 
-// Clique direito: cria marcador
-window.addEventListener('contextmenu', function (event) {
-    event.preventDefault();
-
-    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-
-    raycaster.setFromCamera(mouse, camera);
-    const intersects = raycaster.intersectObject(sphere);
-
-    if (intersects.length > 0) {
-        const point = intersects[0].point;
-        console.log('📌 Coordenada clicada:', point);
-
-        if (selectedMarker) scene.remove(selectedMarker);
-
-        selectedMarker = new THREE.Mesh(
-            new THREE.SphereGeometry(10, 32, 32),
-            new THREE.MeshBasicMaterial({ color: 0x00ff00 })
-        );
-        selectedMarker.position.copy(point);
-        scene.add(selectedMarker);
-
-        markerDirection = raycaster.ray.direction.clone().normalize();
-        isRightMouseDown = true;
-    } else {
-        console.log('❌ Nenhuma interseção com a esfera encontrada.');
-    }
-});
-
-// Solta botão direito
-window.addEventListener('mouseup', function (event) {
-    if (event.button === 2) {
-        isRightMouseDown = false;
-    }
-});
-
-// Scroll move marcador
-window.addEventListener('wheel', function (event) {
-    if (isRightMouseDown && selectedMarker && markerDirection) {
-        const distance = event.deltaY > 0 ? -5 : 5;
-        const offset = markerDirection.clone().multiplyScalar(distance);
-        selectedMarker.position.add(offset);
-        console.log('📏 Nova posição:', selectedMarker.position);
-    }
-});
 
 // Clique no menu troca de cena
 window.handleSceneClick = function (sceneId) {
