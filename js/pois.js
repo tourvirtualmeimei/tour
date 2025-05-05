@@ -67,7 +67,7 @@ export function createPOIMesh(poiConfig, camera, renderer) {
 
 // Função que atualiza os POIs da cena
 export function updatePOIs(sceneNumber, scene, camera, renderer) {
-    import('js/scenes.js').then(({ sceneConfigurations }) => {
+    import('./scenes.js').then(({ sceneConfigurations }) => {
         const poisToRemove = scene.children.filter(child => child.isPOI);
         poisToRemove.forEach(poi => {
             scene.remove(poi);
