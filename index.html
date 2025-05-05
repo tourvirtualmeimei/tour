@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tour Virtual Cantinho da MeiMei</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      height: 100%;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #111;
+    }
+
+    #container {
+      width: 100%;
+      height: 100vh;
+      position: relative;
+    }
+
+    #loader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      z-index: 9999;
+      color: white;
+      font-size: 18px;
+    }
+
+    .spinner {
+      border: 6px solid #f3f3f3;
+      border-top: 6px solid #3498db;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+      margin-bottom: 10px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .menu-icon {
+      width: 20px;
+      height: 20px;
+      object-fit: contain;
+    }
+
+    .poi {
+      width: 100px;
+      height: 100px;
+      background-color: red;
+      border-radius: 50%;
+      position: absolute;
+      cursor: pointer;
+      transform: translate(-50%, -50%);
+      z-index: 10;
+    }
+
+    .poi-video {
+      width: 60px;
+      height: 60px;
+      background-color: blue;
+      border-radius: 10%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      cursor: pointer;
+      z-index: 10;
+    }
+
+    #menu-lateral {
+      position: fixed;
+      top: 60px;
+      left: 20px;
+      width: 220px;
+      background: rgba(117, 194, 246, 0.9);
+      padding: 20px 15px;
+      border-radius: 12px;
+      z-index: 1000;
+      color: #fff;
+      box-shadow: 0 0 10px rgba(0,0,0,0.4);
+      max-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    #menu-lateral h3 {
+      margin-top: 0;
+      margin-bottom: 15px;
+      font-size: 18px;
+      text-align: center;
+      border-bottom: 1px solid #555;
+      padding-bottom: 5px;
+    }
+
+    #menu-lateral .menu-buttons {
+      overflow-y: auto;
+    }
+
+    #menu-lateral button {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+      background: #2d537a;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      width: 100%;
+      font-size: 14px;
+      transition: background 0.3s ease;
+    }
+
+    #menu-lateral button:hover {
+      background: #4682b4;
+    }
+
+    #menu-toggle {
+      display: none;
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      z-index: 1100;
+      background-color: #1e90ff;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      font-size: 24px;
+      cursor: pointer;
+      box-shadow: 0 0 8px rgba(0,0,0,0.4);
+    }
+
+    #menu-logo {
+      margin-top: 15px;
+      text-align: center;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    #menu-logo img {
+      max-width: 60px;
+      height: auto;
+      opacity: 0.9;
+      object-fit: contain;
+      filter: drop-shadow(0 0 4px rgba(0,0,0,0.5));
+    }
+
+    @media (max-width: 768px) {
+      #menu-lateral {
+        transform: translateX(-300px);
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      #menu-lateral.active {
+        transform: translateX(0);
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      #menu-toggle {
+        display: block;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Container principal do tour -->
+  <div id="container">
+
+    <!-- Overlay do vídeo YouTube -->
+    <div id="videoOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.8); justify-content: center; align-items: center; z-index: 20;">
+      <div style="position: relative; width: 90%; max-width: 800px;">
+        <iframe id="youtubeIframe" width="100%" height="450"
+          src="" frameborder="0"
+          allow="autoplay; encrypted-media" allowfullscreen>
+        </iframe>
+      </div>
+    </div>
+
+    <!-- Overlay de imagem -->
+    <div id="imageContainer" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.7); z-index: 9998; justify-content: center; align-items: center;">
+      <img id="imageViewer" style="max-width: 90%; max-height: 90%; border-radius: 8px; cursor: pointer;" />
+    </div>
+
+  </div>
+
+  <!-- Loader animado -->
+  <div id="loader">
+    <div class="spinner"></div>
+    <p>Carregando...</p>
+  </div>
+
+  <!-- Botão do menu lateral para mobile -->
+  <button id="menu-toggle">☰</button>
+
+  <!-- Menu lateral -->
+  <div id="menu-lateral">
+    <div class="menu-buttons">
+      <h3>Menu</h3>
+      <button onclick="handleSceneClick(6)"><img src="images/icon/recepcao.png" class="menu-icon" /> Recepção</button>
+      <button onclick="handleSceneClick(9)"><img src="images/icon/eventos.png" class="menu-icon" /> Eventos</button>
+      <button onclick="handleSceneClick(7)"><img src="images/icon/cinema.png" class="menu-icon" /> Cinema</button>
+      <button onclick="handleSceneClick(8)"><img src="images/icon/lavanderia.png" class="menu-icon" /> Lavanderia</button>
+      <button onclick="handleSceneClick(10)"><img src="images/icon/playground.png" class="menu-icon" /> Playground</button>
+      <button onclick="handleSceneClick(15)"><img src="images/icon/refeitorio.png" class="menu-icon" /> Refeitório</button>
+      <button onclick="handleSceneClick(14)"><img src="images/icon/cozinha.png" class="menu-icon" /> Cozinha</button>
+      <button onclick="handleSceneClick(12)"><img src="images/icon/playbebe.png" class="menu-icon" /> Playground dos Bebês</button>
+      <button onclick="handleSceneClick(13)"><img src="images/icon/bercario.png" class="menu-icon" /> Berçário</button>
+      <button onclick="handleSceneClick(11)"><img src="images/icon/menina.png" class="menu-icon" /> Quarto das Meninas</button>
+      <button onclick="handleSceneClick(16)"><img src="images/icon/menino.png" class="menu-icon" /> Quarto dos Meninos</button>
+    </div>
+
+    <div id="menu-logo">
+      <img src="/static/images/logo.jpg" alt="Logo Cantinho da Mei Mei" />
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script type="module" src="js/main.js"></script>
+
+  <script>
+    const toggleBtn = document.getElementById("menu-toggle");
+    const menu = document.getElementById("menu-lateral");
+    toggleBtn.addEventListener("click", () => menu.classList.toggle("active"));
+
+    function openYouTubeVideo(videoIdOrUrl) {
+      const overlay = document.getElementById('videoOverlay');
+      const iframe = document.getElementById('youtubeIframe');
+      const videoId = videoIdOrUrl.includes('youtu')
+        ? videoIdOrUrl.split(/v=|youtu\.be\//)[1].split(/[?&]/)[0]
+        : videoIdOrUrl;
+      iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+      overlay.style.display = 'flex';
+    }
+
+    document.getElementById('videoOverlay').addEventListener('click', function(e) {
+      if (e.target.id === 'videoOverlay') {
+        const iframe = document.getElementById('youtubeIframe');
+        iframe.src = '';
+        document.getElementById('videoOverlay').style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>
