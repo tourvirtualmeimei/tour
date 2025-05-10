@@ -1,8 +1,17 @@
 
 # 🌐 Tour Virtual - Cantinho da Meimei
 
-Projeto de TCC de **Guilherme Silveira Cavinato** - Engenharia da Computação  
-Faculdade de Tecnologia Termomecânica – Salvador Arena
+Projeto de TCC - Engenharia da Computação  
+Faculdade Engenheiro Salvador Arena (FESA) - São Bernardo do Campo, São Paulo
+
+Autores:
+Bruna dos Santos Freitas
+Carlos Baroni Piolla
+Guilherme Silveira Cavinato
+Thiago Cardoso Hanna
+
+Orientador:
+Prof. Dr. Israel Florentino
 
 Este repositório apresenta um tour virtual em 360° desenvolvido para o abrigo **Cantinho da Meimei**, com o objetivo de proporcionar uma experiência imersiva de visita remota, promovendo visibilidade institucional, captação de recursos e valorização da história do local.
 
