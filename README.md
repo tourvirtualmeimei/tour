@@ -86,7 +86,7 @@ http://localhost:8000
 ## 🌍 Acesso Online
 
 Acesse o tour virtual hospedado no GitHub Pages:  
-🔗 [https://tourvirtualmeimei.github.io/tour-virtual/](https://tourvirtualmeimei.github.io/tour-virtual/)
+🔗 [https://tourvirtualmeimei.github.io/tour/](https://tourvirtualmeimei.github.io/tour/)
 
 ---
 
